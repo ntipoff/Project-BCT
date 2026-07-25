@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Book {
+  id           String    @id @default(cuid())
+  title        String
+  author       String
+  status       BookStatus @default(PLANNED)
+  dateStarted  DateTime?
+  dateFinished DateTime?
+  rating       Int?       // 1-5. Nullable; only meaningful once status = FINISHED
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  meetings     Meeting[]
+}
+
+enum BookStatus {
+  PLANNED
+  READING
+  FINISHED
+}
+
+model Member {
+  id             String       @id @default(cuid())
+  name           String
+  contact        String?
+  createdAt      DateTime     @default(now())
+  meetingsHosted Meeting[]    @relation("HostedMeetings")
+  attendance     Attendance[]
+}
+
+model Meeting {
+  id         String       @id @default(cuid())
+  date       DateTime
+  bookId     String
+  book       Book         @relation(fields: [bookId], references: [id])
+  hostId     String
+  host       Member       @relation("HostedMeetings", fields: [hostId], references: [id])
+  notes      String?      // discussion points, free text
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  attendance Attendance[]
+}
+
+model Attendance {
+  meetingId String
+  memberId  String
+  meeting   Meeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  member    Member  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@id([meetingId, memberId])
+}

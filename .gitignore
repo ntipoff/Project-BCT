@@ -216,3 +216,25 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node.js / Next.js
+node_modules/
+/.next/
+/out/
+next-env.d.ts
+*.tsbuildinfo
+.vercel
+
+# Root-level lib/ is this project's shared server logic (D-010), not a Python venv lib/
+!/lib/
+
+# Env files (never commit real secrets — see docs/decisions/D-009)
+.env.local
+.env*.local
+
+# Local SQLite dev/test databases (regenerable via prisma migrate dev — see D-012)
+*.db
+*.db-journal
+prisma/dev.db
+
+/app/generated/prisma
