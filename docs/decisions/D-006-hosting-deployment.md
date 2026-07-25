@@ -1,6 +1,7 @@
 # D-006 — Hosting & Deployment
 
-**Status:** Accepted
+**Status:** Accepted — content stands; **execution deferred, see D-012** (local-first dev
+first, Fly.io provisioning happens when the owner says go)
 **Date:** 2026-07-25
 **Decided by:** Project owner (explicit choice: Fly.io)
 

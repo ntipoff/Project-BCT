@@ -1,6 +1,7 @@
 # D-008 — CI/CD Pipeline & Deployment Gate
 
-**Status:** Accepted
+**Status:** Accepted — the `test` job is built now; **the `deploy` job is deferred, see
+D-012** (Fly.io deploy happens when the owner says go; the test-only gate does not wait)
 **Date:** 2026-07-25
 **Decided by:** Planner, per KEEL Steps 11–14 (the gate must exist, must be proven, must
 be binding)
