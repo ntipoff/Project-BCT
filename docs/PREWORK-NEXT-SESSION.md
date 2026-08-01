@@ -1,57 +1,62 @@
 # Prework — Next Session (KEEL Pre-Flight Ritual)
 
-Do these in order at the start of tomorrow's session. Don't reopen today's chat — start
-fresh, per KEEL's own daily-ritual reasoning: continuity lives in the repo, not the chat.
-
 ## 1. Start a brand-new chat with the Planner
 
-Do not resume this conversation. Open a new one in the Project-BCT Project.
+Open a new one in the Project-BCT Project.
 
-## 2. Snapshot the repo and hand it to the Planner
-
-From your local clone:
+## 2. Snapshot and hand it to the Planner
 
 ```
 git archive --format=tar.gz -o project-bct-$(date +%Y%m%d).tar.gz HEAD
 ```
 
-Upload that archive to the new chat.
+Same as always. If you want commit history auditable too (the PR/CI links in the build
+close-out haven't been independently checked yet), you can additionally provide:
 
-## 3. Say this to the Planner (verbatim is fine)
+```
+git log --oneline -20
+```
 
-> Read `docs/close-outs/2026-07-25-close-out.md` and `docs/decisions/` — where are we,
-> and what's next?
+pasted directly, or a `git bundle` if you want the Planner to be able to inspect history
+itself. Not required to proceed — just closes the one remaining verification gap.
 
-That close-out names every open item and the exact next steps. The Planner should be
-grounded in under a minute without you re-explaining anything, per KEEL's own proof
-for this step.
+## 3. Say this to the Planner
 
-## 4. First real decision to make tomorrow
+> Read `docs/close-outs/2026-08-01-verification-session-close-out.md` and
+> `docs/decisions/` — where are we, and what's next?
 
-**D-013 — hosting.** Pick one, then ask the Planner to write it up as `docs/decisions/D-013-hosting-alternative.md`
-and update the index table in `ARCHITECTURE.md`:
+## 4. The one open verification item
 
-- Fly.io pay-as-you-go (~$3-8/mo for this app's actual size — not the $40/mo figure that
-  prompted this reconsideration)
-- Laptop + Cloudflare Tunnel / Tailscale Funnel (free, laptop must be on)
-- Oracle Cloud Always Free VM (free, always-on, some setup friction)
+- [ ] If you want it: confirm the commit hashes / PR numbers / CI run links in
+      `docs/close-outs/2026-08-01-close-out.md` actually resolve (e.g. open one PR link
+      and check it matches). Not blocking — Phases 0–6 checked out solidly against the
+      actual code this session either way.
 
-This decision does **not** block anything else — Phase 2 (local scaffolding) can start
-in parallel or even before it's made, per D-012.
+## 5. Real decision point: Phase 7
 
-## 5. Then hand Claude Code (the Builder) this
+Phases 0–6 are now verified against actual code, not just described. That makes this a
+reasonable time to decide: move to Phase 7 (Fly.io provisioning under the friend's
+account per D-013, Dockerfile, deploy job, branch protection, backups), or keep working
+locally (more features, UI polish, etc.) first. Either is fine — just make the call
+explicitly rather than drifting into one.
 
-> Start Phase 2 of `docs/ORDERS-FOR-BUILDER.md` — scaffold the Next.js/Prisma/SQLite app
-> locally. This doesn't require the D-013 hosting decision to be finalized first.
+If it's Phase 7: re-read D-006 and D-013 together first, since D-013 changes *who*
+provisions the Fly app (the friend, with you watching) even though the technical shape
+is unchanged.
 
-Watch for the Phase 2 PROOF: `npx prisma migrate dev` succeeds, and the app loads at
-`localhost:3000`.
+## 6. To view the app locally
 
-## Verification housekeeping (do this before anything else, takes 30 seconds)
+From the repo root, on your machine (or via Claude Code):
 
-The close-out flags two claims from today that were never independently checked —
-confirm them first, per D-011 (a claim without a checked artefact is a guess):
+```
+npm install    # if dependencies changed since last run
+npx prisma generate
+npx prisma migrate deploy
+npm run dev
+```
 
-- [ ] `git log -1 794bcf5` actually shows the expected `docs/` files
-- [ ] `git log -- ARCHITECTURE.md` confirms it's committed (it may have been created
-      after `794bcf5` and not actually pushed yet)
+Then open `http://localhost:3000`. Expect: shared-password login → member picker →
+dashboard. The Planner confirmed the code paths for this exist (`app/login`,
+`app/members`, `app/books`, `app/meetings`, `app/dashboard` all present) but could not
+run the dev server itself to confirm the actual rendered pages — that check still belongs
+to you or Claude Code.
